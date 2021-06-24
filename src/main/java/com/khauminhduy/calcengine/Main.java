@@ -21,21 +21,20 @@ public class Main {
         MathProcessing processor = retrieveProcessor(keyword);
         double result = processor.doCalculation(leftVal, rightVal);
         System.out.println("result = " + result);
-     }
+    }
 
     private static MathProcessing retrieveProcessor(String keyword) {
-        switch(keyword) {
-            case "add":
-                return new Adder();
-            case "sub":
-                return new Subtracter();
-            case "mul":
-                return new Multiplier();
-            case "div":
-                return new Divider();
-        }
-        return null;
+        MathProcessing[] processors = {new Adder(), new Subtracter(), new Multiplier(), new Divider()};
 
+        for (MathProcessing processor : processors) {
+            CommandKeyword annotation = processor.getClass().getAnnotation(CommandKeyword.class);
+            String name = annotation.name();
+            if (keyword.equalsIgnoreCase(name)) {
+                return processor;
+            }
+        }
+
+        return null;
     }
 
     static double valueFromWord(String word) {
@@ -44,13 +43,13 @@ public class Main {
                 "five", "six", "seven", "eight", "nine"
         };
         double value = -1d;
-        for(int index = 0; index < numberWords.length; index++) {
-            if(word.equals(numberWords[index])) {
+        for (int index = 0; index < numberWords.length; index++) {
+            if (word.equals(numberWords[index])) {
                 value = index;
                 break;
             }
         }
-        if(value == -1d)
+        if (value == -1d)
             value = Double.parseDouble(word);
 
         return value;
