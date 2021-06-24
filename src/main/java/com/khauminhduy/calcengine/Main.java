@@ -1,5 +1,6 @@
 package com.khauminhduy.calcengine;
 
+import java.lang.reflect.Method;
 import java.util.Scanner;
 
 public class Main {
@@ -18,17 +19,38 @@ public class Main {
     }
 
     private static void process(String keyword, double leftVal, double rightVal) {
-        MathProcessing processor = retrieveProcessor(keyword);
-        double result = processor.doCalculation(leftVal, rightVal);
+        Object processor = retrieveProcessor(keyword);
+        double result = 0d;
+        if(processor instanceof MathProcessing) {
+            result = ((MathProcessing) processor).doCalculation(leftVal, rightVal);
+        } else {
+            result = handlerCalculate(processor, leftVal, rightVal);
+        }
         System.out.println("result = " + result);
     }
 
-    private static MathProcessing retrieveProcessor(String keyword) {
-        MathProcessing[] processors = {new Adder(), new Subtracter(), new Multiplier(), new Divider()};
+    private static double handlerCalculate(Object processor, double leftVal, double rightVal) {
+        double result = 0d;
 
-        for (MathProcessing processor : processors) {
+        try {
             CommandKeyword annotation = processor.getClass().getAnnotation(CommandKeyword.class);
-            String name = annotation.name();
+            String method = annotation.method();
+            Method calculate = processor.getClass().getMethod(method, double.class, double.class);
+            result = (double) calculate.invoke(processor, leftVal, rightVal);
+
+        } catch (Exception e) {
+            System.out.println("Error accessing method - " + e.getMessage());
+        }
+
+        return result;
+    }
+
+    private static Object retrieveProcessor(String keyword) {
+        Object[] processors = {new Adder(), new Subtracter(), new Multiplier(), new Divider(), new PowerOf()};
+
+        for (Object processor : processors) {
+            CommandKeyword annotation = processor.getClass().getAnnotation(CommandKeyword.class);
+            String name = annotation.value();
             if (keyword.equalsIgnoreCase(name)) {
                 return processor;
             }

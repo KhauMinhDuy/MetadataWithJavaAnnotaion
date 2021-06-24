@@ -1,6 +1,6 @@
 package com.khauminhduy.calcengine;
 
-@CommandKeyword(name = "mul")
+@CommandKeyword("mul")
 public class Multiplier implements MathProcessing {
     @Override
     public double doCalculation(double leftVal, double rightVal) {

@@ -1,6 +1,6 @@
 package com.khauminhduy.calcengine;
 
-@CommandKeyword(name = "add")
+@CommandKeyword("add")
 public class Adder implements MathProcessing {
 
     @Override

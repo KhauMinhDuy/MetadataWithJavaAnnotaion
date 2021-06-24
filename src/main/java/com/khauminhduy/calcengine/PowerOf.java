@@ -1,9 +1,9 @@
 package com.khauminhduy.calcengine;
 
-public class PowerOf implements MathProcessing {
+@CommandKeyword("power")
+public class PowerOf {
 
-    @Override
-    public double doCalculation(double leftVal, double rightVal) {
+    public double calculate(double leftVal, double rightVal) {
         return Math.pow(leftVal, rightVal);
     }
 

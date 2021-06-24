@@ -9,5 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface CommandKeyword {
 
-    String name();
+    String value();
+    String method() default "calculate";
+
 }
